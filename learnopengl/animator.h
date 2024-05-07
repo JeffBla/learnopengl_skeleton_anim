@@ -11,14 +11,17 @@
 #include "bone.h"
 
 class Animator {
+   private:
+    int nMaxBones = 150;
+
    public:
     Animator(Animation* animation) {
         m_CurrentTime = 0.0;
         m_CurrentAnimation = animation;
 
-        m_FinalBoneMatrices.reserve(100);
+        m_FinalBoneMatrices.reserve(nMaxBones);
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < nMaxBones; i++)
             m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
     }
 
@@ -49,10 +52,10 @@ class Animator {
 
         glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-        auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
-        if (boneInfoMap.find(nodeName) != boneInfoMap.end()) {
-            int index = boneInfoMap[nodeName].id;
-            glm::mat4 offset = boneInfoMap[nodeName].offset;
+        auto* boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+        if (boneInfoMap->find(nodeName) != boneInfoMap->end()) {
+            int index = boneInfoMap->at(nodeName).id;
+            glm::mat4 offset = boneInfoMap->at(nodeName).offset;
             m_FinalBoneMatrices[index] = globalTransformation * offset;
         }
 
@@ -60,8 +63,8 @@ class Animator {
             CalculateBoneTransform(&node->children[i], globalTransformation);
     }
 
-    std::vector<glm::mat4> GetFinalBoneMatrices() {
-        return m_FinalBoneMatrices;
+    std::vector<glm::mat4>* GetFinalBoneMatrices() {
+        return &m_FinalBoneMatrices;
     }
 
    private:

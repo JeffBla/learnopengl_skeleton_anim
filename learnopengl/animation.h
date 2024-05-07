@@ -52,8 +52,8 @@ class Animation {
     inline float GetTicksPerSecond() { return m_TicksPerSecond; }
     inline float GetDuration() { return m_Duration; }
     inline const AssimpNodeData& GetRootNode() { return m_RootNode; }
-    inline const std::map<std::string, BoneInfo>& GetBoneIDMap() {
-        return m_BoneInfoMap;
+    inline const std::map<std::string, BoneInfo>* GetBoneIDMap() {
+        return &m_BoneInfoMap;
     }
 
    private:
@@ -69,9 +69,8 @@ class Animation {
             std::string boneName = channel->mNodeName.data;
 
             if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
-                // boneInfoMap[boneName].id = boneCount;
-                // boneCount++;
-                continue;
+                boneInfoMap[boneName].id = boneCount;
+                boneCount++;
             }
             m_Bones.push_back(Bone(channel->mNodeName.data,
                                    boneInfoMap[channel->mNodeName.data].id, channel));

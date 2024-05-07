@@ -118,15 +118,29 @@ class Model {
                 indices.push_back(face.mIndices[j]);
         }
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        aiString texture_file;
+        material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), texture_file);
+        material->Get(AI_MATKEY_TEXTURE(aiTextureType_SPECULAR, 0), texture_file);
+        material->Get(AI_MATKEY_TEXTURE(aiTextureType_HEIGHT, 0), texture_file);
+        material->Get(AI_MATKEY_TEXTURE(aiTextureType_AMBIENT, 0), texture_file);
+        auto texture = scene->GetEmbeddedTexture(texture_file.C_Str());
 
-        vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+        if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+            vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+            textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        }
+        if (material->GetTextureCount(aiTextureType_SPECULAR) != 0) {
+            vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+            textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+        }
+        if (material->GetTextureCount(aiTextureType_HEIGHT) != 0) {
+            std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+            textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+        }
+        if (material->GetTextureCount(aiTextureType_AMBIENT) != 0) {
+            std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+            textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+        }
 
         ExtractBoneWeightForVertices(vertices, mesh, scene);
 

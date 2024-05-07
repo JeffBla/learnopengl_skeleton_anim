@@ -24,6 +24,31 @@
         "isDefault": true
       },
       "detail": "偵錯工具產生的工作。"
+    },
+    {
+      "type": "cppbuild",
+      "label": "C/C++: g++ build skeletal_animation",
+      "command": "/usr/bin/g++",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "${workspaceFolder}/skeletal_animation.cpp",
+        "glad/gl.c",
+        "./learnopengl/stb_image.cpp",
+        "-o",
+        "${workspaceFolder}/skeletal_animation",
+        "-lglfw",
+        "-lassimp"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "偵錯工具產生的工作。"
     }
   ],
   "version": "2.0.0"

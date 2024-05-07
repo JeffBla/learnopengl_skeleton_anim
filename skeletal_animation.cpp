@@ -76,12 +76,12 @@ int main() {
 
     // build and compile shaders
     // -------------------------
-    Shader ourShader("anim_model.vs", "anim_model.fs");
+    Shader ourShader("/home/jeffbla/Project/openGL_test/LearnOpenGL/src/8.guest/2020/skeletal_animation/anim_model.vs", "/home/jeffbla/Project/openGL_test/LearnOpenGL/src/8.guest/2020/skeletal_animation/anim_model.fs");
 
     // load models
     // -----------
-    Model ourModel("/home/jeffbla/Video/model_export/untitled.fbx");
-    Animation danceAnimation("/home/jeffbla/Video/model_export/untitled.fbx", &ourModel);
+    Model ourModel("/home/jeffbla/Video/model_export/tmp.fbx");
+    Animation danceAnimation("/home/jeffbla/Video/model_export/tmp.fbx", &ourModel);
     Animator animator(&danceAnimation);
 
     // draw in wireframe
@@ -115,9 +115,9 @@ int main() {
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
-        auto transforms = animator.GetFinalBoneMatrices();
-        for (int i = 0; i < transforms.size(); ++i)
-            ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+        auto* transforms = animator.GetFinalBoneMatrices();
+        for (int i = 0; i < transforms->size(); ++i)
+            ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms->at(i));
 
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
